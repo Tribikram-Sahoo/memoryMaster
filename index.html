@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MemoryMaster - Card Matching Game</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Particles Background -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <h1>MemoryMaster</h1>
+            </div>
+            <div class="header-stats">
+                <div class="stat">
+                    <i class="fas fa-clock"></i>
+                    <span id="timer">00:00</span>
+                </div>
+                <div class="stat">
+                    <i class="fas fa-hand-pointer"></i>
+                    <span id="moves">0</span> Moves
+                </div>
+                <div class="stat">
+                    <i class="fas fa-star"></i>
+                    <span id="score">0</span> Points
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Game Container -->
+    <div class="game-container">
+        <!-- Difficulty Selection -->
+        <div class="difficulty-screen" id="difficultyScreen">
+            <div class="difficulty-card">
+                <h2>Choose Your Challenge</h2>
+                <p>Test your memory skills!</p>
+                <div class="difficulty-buttons">
+                    <button class="difficulty-btn easy" data-difficulty="easy">
+                        <i class="fas fa-smile"></i>
+                        <span>Easy</span>
+                        <small>4x3 Grid</small>
+                    </button>
+                    <button class="difficulty-btn medium" data-difficulty="medium">
+                        <i class="fas fa-meh"></i>
+                        <span>Medium</span>
+                        <small>4x4 Grid</small>
+                    </button>
+                    <button class="difficulty-btn hard" data-difficulty="hard">
+                        <i class="fas fa-fire"></i>
+                        <span>Hard</span>
+                        <small>6x4 Grid</small>
+                    </button>
+                </div>
+                <button class="leaderboard-btn" id="showLeaderboardBtn">
+                    <i class="fas fa-trophy"></i> View Leaderboard
+                </button>
+            </div>
+        </div>
+
+        <!-- Game Board -->
+        <div class="game-board-container" id="gameBoardContainer" style="display: none;">
+            <div class="game-info">
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <div class="info-text">
+                        <span class="info-label">Pairs Found</span>
+                        <span class="info-value" id="pairsFound">0 / 0</span>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="info-text">
+                        <span class="info-label">Accuracy</span>
+                        <span class="info-value" id="accuracy">100%</span>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="info-text">
+                        <span class="info-label">Combo</span>
+                        <span class="info-value" id="combo">x1</span>
+                    </div>
+                </div>
+            </div>
+            <div class="game-board" id="gameBoard">
+                <!-- Cards will be generated here -->
+            </div>
+            <div class="game-controls">
+                <button class="control-btn" id="pauseBtn">
+                    <i class="fas fa-pause"></i> Pause
+                </button>
+                <button class="control-btn" id="restartBtn">
+                    <i class="fas fa-redo"></i> Restart
+                </button>
+                <button class="control-btn" id="quitBtn">
+                    <i class="fas fa-times"></i> Quit
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Win Modal -->
+    <div class="modal" id="winModal">
+        <div class="modal-content win-content">
+            <div class="confetti" id="confetti"></div>
+            <i class="fas fa-trophy win-icon"></i>
+            <h2>Congratulations!</h2>
+            <p>You completed the game!</p>
+            <div class="win-stats">
+                <div class="win-stat">
+                    <i class="fas fa-clock"></i>
+                    <span id="finalTime">00:00</span>
+                    <small>Time</small>
+                </div>
+                <div class="win-stat">
+                    <i class="fas fa-hand-pointer"></i>
+                    <span id="finalMoves">0</span>
+                    <small>Moves</small>
+                </div>
+                <div class="win-stat">
+                    <i class="fas fa-star"></i>
+                    <span id="finalScore">0</span>
+                    <small>Score</small>
+                </div>
+            </div>
+            <div class="win-rating">
+                <div class="stars" id="winStars"></div>
+                <p id="winMessage">Amazing!</p>
+            </div>
+            <div class="win-actions">
+                <button class="win-btn primary" id="playAgainBtn">
+                    <i class="fas fa-play"></i> Play Again
+                </button>
+                <button class="win-btn secondary" id="changeDifficultyBtn">
+                    <i class="fas fa-sliders-h"></i> Change Difficulty
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaderboard Modal -->
+    <div class="modal" id="leaderboardModal">
+        <div class="modal-content leaderboard-content">
+            <span class="close-modal" id="closeLeaderboard">&times;</span>
+            <h2><i class="fas fa-trophy"></i> Leaderboard</h2>
+            <div class="leaderboard-tabs">
+                <button class="tab-btn active" data-tab="easy">Easy</button>
+                <button class="tab-btn" data-tab="medium">Medium</button>
+                <button class="tab-btn" data-tab="hard">Hard</button>
+            </div>
+            <div class="leaderboard-list" id="leaderboardList">
+                <!-- Leaderboard items will be loaded here -->
+            </div>
+            <button class="clear-btn" id="clearLeaderboardBtn">
+                <i class="fas fa-trash"></i> Clear Leaderboard
+            </button>
+        </div>
+    </div>
+
+    <!-- Pause Modal -->
+    <div class="modal" id="pauseModal">
+        <div class="modal-content pause-content">
+            <i class="fas fa-pause-circle pause-icon"></i>
+            <h2>Game Paused</h2>
+            <div class="pause-actions">
+                <button class="pause-btn primary" id="resumeBtn">
+                    <i class="fas fa-play"></i> Resume
+                </button>
+                <button class="pause-btn secondary" id="pauseRestartBtn">
+                    <i class="fas fa-redo"></i> Restart
+                </button>
+                <button class="pause-btn secondary" id="pauseQuitBtn">
+                    <i class="fas fa-home"></i> Main Menu
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sound Toggle -->
+    <button class="sound-toggle" id="soundToggle">
+        <i class="fas fa-volume-up"></i>
+    </button>
+
+    <script src="script.js"></script>
+</body>
+</html>
